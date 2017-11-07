@@ -884,6 +884,13 @@ export class LinxDevice {
     /**************************************************************************
     *   UART
     **************************************************************************/
+
+    /**
+     * Uart open on the specified channel and initialize to a specific baud rate.
+     * @param channel the desired channel
+     * @param baud the desired baud rate
+     * @return Promise that resolves with an object containing a message, the actual baud rate, and a statusCode
+     */
     uartOpen(channel: number, baud: number): Promise<Return.UartOpen> {
         let uartInfo: Uint8Array = new Uint8Array(5);
         uartInfo[0] = channel;
@@ -910,6 +917,12 @@ export class LinxDevice {
         });
     }
 
+    /**
+     * Set baud rate on the specified channel.
+     * @param channel the desired channel
+     * @param baud the desired baud rate
+     * @return Promise that resolves with an object containing a message, the actual baud rate, and a statusCode
+     */
     uartSetBaudRate(channel: number, baud: number): Promise<Return.UartSetBaudRate> {
         let uartInfo: Uint8Array = new Uint8Array(5);
         uartInfo[0] = channel;
@@ -936,6 +949,11 @@ export class LinxDevice {
         });
     }
 
+    /**
+     * Uart get bytes available on the specified channel.
+     * @param channel the desired channel
+     * @return Promise that resolves with an object containing a message, the number of bytes, and a statusCode
+     */
     uartGetBytesAvailable(channel: number): Promise<Return.UartGetBytesAvailable> {
         let commandParams = new Uint8Array(1);
         commandParams[0] = channel;
@@ -960,6 +978,12 @@ export class LinxDevice {
         });
     }
 
+    /**
+     * Uart read a specific number of bytes on the specified channel.
+     * @param channel the desired channel
+     * @param numBytes the number of bytes to read
+     * @return Promise that resolves with an object containing a message, a byte array of data, and a statusCode
+     */
     uartRead(channel: number, numBytes: number): Promise<Return.UartRead> {
         let commandParams = new Uint8Array(2);
         commandParams[0] = channel;
@@ -989,6 +1013,12 @@ export class LinxDevice {
         });
     }
 
+    /**
+     * Uart write on the specified channel.
+     * @param channel the desired channel
+     * @param data the byte array to send
+     * @return Promise that resolves with an object containing a message and a statusCode
+     */
     uartWrite(channel: number, data: number[]): Promise<Return.Default> {
         let uartInfo: Uint8Array = new Uint8Array(1 + data.length);
         uartInfo[0] = channel;
@@ -998,6 +1028,11 @@ export class LinxDevice {
         return this.genericReturnHandler(packet);
     }
 
+    /**
+     * Uart close on the specified channel.
+     * @param channel the desired channel
+     * @return Promise that resolves with an object containing a message and a statusCode
+     */
     uartClose(channel: number): Promise<Return.Default> {
         let typedChannelNum: Uint8Array = new Uint8Array(1);
         typedChannelNum[0] = channel;
@@ -1008,6 +1043,12 @@ export class LinxDevice {
     /**************************************************************************
     *   Utilities
     **************************************************************************/
+
+    /**
+     * Call writeRead on supplied transport and return response.
+     * @param packet the packet to send
+     * @return Promise that resolves with the response packet
+     */
     private sendPacketAndParseResponse(packet: Uint8Array): Promise<any> {
         console.log('sending packet: ');
         console.log(packet);
@@ -1040,6 +1081,11 @@ export class LinxDevice {
         });
     }
 
+    /**
+     * Get packet size of command.
+     * @param [commandParams] the parameters to send
+     * @return Packet size
+     */
     private getPacketSize(commandParams?: Uint8Array) {
         if (commandParams == undefined) {
             return 7;
@@ -1047,6 +1093,13 @@ export class LinxDevice {
         return 7 + commandParams.length;
     }
 
+    /**
+     * Generates packet based on packet size, command number, and command parameters.
+     * @param packetSize the size of the packet to send
+     * @param commandNumber the LINX command number for this packet
+     * @param [commandParams] the parameters to send
+     * @return The packet to send
+     */
     private generatePacket(packetSize: number, commandNumber: number, commandParams?: Uint8Array) {
         let packet: Uint8Array = new Uint8Array(packetSize);
         packet[0] = 255;
@@ -1066,6 +1119,12 @@ export class LinxDevice {
         return packet;
     }
 
+    /**
+     * Creates a byte array of a specified number with a specific number of bytes.
+     * @param number the number to convert
+     * @param numBytes the number of bytes to represent the number
+     * @return Byte array representation of number
+     */
     private numberAsByteArray(number, numBytes): Uint8Array {
         let byteArray = new Uint8Array(numBytes);
         for (let i = 0; i < numBytes; i++) {
@@ -1074,6 +1133,11 @@ export class LinxDevice {
         return byteArray;
     }
 
+    /**
+     * Generate checksum from command array.
+     * @param commandArray the packet to send
+     * @return The computed checksum
+     */
     private generateChecksum(commandArray: Uint8Array) {
         let checksum = 0;
         let maxVal = Math.pow(2, 8);
@@ -1083,6 +1147,11 @@ export class LinxDevice {
         return checksum % maxVal;
     }
 
+    /**
+     * Generic promise wrapper for default responses.
+     * @param packet the packet to send
+     * @return Promise that resolves with an object containing a message and a statusCode
+     */
     private genericReturnHandler(packet: Uint8Array): Promise<Return.Default> {
         return new Promise((resolve, reject) => {
             this.sendPacketAndParseResponse(packet)
