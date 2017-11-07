@@ -1,10 +1,10 @@
 import { GenericTransport } from './generic-transport';
 
-export class LinxDevice {
+export abstract class GenericLinxDevice {
     private packetNumber: number = 0;
+    protected abstract transport: GenericTransport;
 
     constructor(
-        private transport: GenericTransport
     ) { }
 
     /**************************************************************************

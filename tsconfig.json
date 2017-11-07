@@ -17,7 +17,7 @@
     "outDir": "./dist"
   },
   "files": [
-    "src/linx-device.ts",
+    "src/generic-linx-device.ts",
     "src/generic-transport.ts"
   ]
 }
