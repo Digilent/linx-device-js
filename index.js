@@ -1,1 +1,2 @@
-exports.LinxDevice = require('./dist/linx-device/linx-device').LinxDevice;
+exports.LinxDevice = require('./dist/linx-device').LinxDevice;
+exports.GenericTransport = require('./dist/generic-transport').GenericTransport

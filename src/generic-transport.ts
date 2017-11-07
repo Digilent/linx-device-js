@@ -1,4 +1,4 @@
-export abstract class GenericTransportService {
+export abstract class GenericTransport {
 
     constructor() { }
 

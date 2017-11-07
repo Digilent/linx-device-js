@@ -1,13 +1,11 @@
-import { GenericTransportService } from './generic-transport';
+import { GenericTransport } from './generic-transport';
 
 export class LinxDevice {
     private packetNumber: number = 0;
 
     constructor(
-        private transport: GenericTransportService
-    ) {
-        console.log('DeviceService constructor');
-    }
+        private transport: GenericTransport
+    ) { }
 
     /**************************************************************************
     *   Device
