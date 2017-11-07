@@ -2,4 +2,3 @@ docs
 spec
 node_modules
 src
-*.ngfactory.ts
