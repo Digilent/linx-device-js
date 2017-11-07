@@ -1,0 +1,21 @@
+{
+  "name": "@digilent/linx-device-js",
+  "version": "0.0.1",
+  "description": "LINX device javascript class",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine-node spec/core.js",
+    "prepublish": "npm run build",
+    "clean": "rm -rf dist && rm -rf docs/*",
+    "docs": "typedoc --out ./docs ./src",
+    "build": "npm run clean && tsc && npm run docs"
+  },
+  "author": "digilent",
+  "license": "MIT",
+  "devDependencies": {    
+    "@types/node": "^7.0.12",
+    "typescript": "2.0.10",
+    "uglify-js": "^3.0.28",
+    "typedoc": "0.8.0"
+  }
+}

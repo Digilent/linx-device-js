@@ -1,0 +1,1 @@
+exports.LinxDevice = require('./dist/linx-device/linx-device').LinxDevice;
