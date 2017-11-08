@@ -8,9 +8,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-1. A valid LINX device
-2. Node.js
-3. NPM
+1. Node.js
+2. NPM
 
 ### Subdirectories
 * **dist**
