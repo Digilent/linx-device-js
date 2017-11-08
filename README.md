@@ -1,10 +1,50 @@
-# LINX Device
+# Linx-device-js
 
-1. Clone this repository.
-2. Run `npm install`
+LINX generic device and transport classes
 
-## Subdirectories
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine.
+
+### Prerequisites
+
+1. A valid LINX device
+2. Node.js
+3. NPM
+
+### Subdirectories
 * **dist**
-  * Contains the build module, the TS declaration file and any other support files.
+  * Contains the built files ready for release.
+* **docs**
+  * Contains built documentation from source.
+* **spec**
+  * Contains test files.
 * **src**
-  * Contains the module source code includes TS, CSS, etc.
+  * Contains the source files.
+
+### Installing
+
+Clone this repository
+
+```
+git clone https://git.digilentinc.com/dsukumar/linx-device-js
+```
+
+Move to project directory
+
+```
+cd linx-device-js
+```
+
+Install dependencies
+
+```
+npm install
+```
+
+Notes:
+1. Proper child classes extend GenericLinxDevice and have a transport data member that extends GenericTransportService
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
