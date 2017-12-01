@@ -206,7 +206,7 @@ export abstract class GenericLinxDevice {
      * Gets the valid digital channels.
      * @return Promise that resolves with an object containing a message, statusCode, and chans array
      */
-    digitalGetChans(): Promise<Return.DigitalGetChans> {
+    digitalGetChans(): Promise<Return.GetChans> {
         let packet = this.generatePacket(this.getPacketSize(), 8);
         return new Promise((resolve, reject) => {
             this.sendPacketAndParseResponse(packet)
@@ -350,6 +350,66 @@ export abstract class GenericLinxDevice {
     /**************************************************************************
     *   Analog
     **************************************************************************/
+
+    /**
+     * Gets the valid analog input channels.
+     * @return Promise that resolves with an object containing a message, statusCode, and chans array
+     */
+    analogGetInputChans(): Promise<Return.GetChans> {
+        let packet = this.generatePacket(this.getPacketSize(), 9);
+        return new Promise((resolve, reject) => {
+            this.sendPacketAndParseResponse(packet)
+                .then((data) => {
+                    let chans = [];
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
+                        chans.push(data[i + 5]);
+                    }
+                    resolve({
+                        statusCode: 0,
+                        message: 'ok',
+                        chans: chans
+                    })
+                })
+                .catch((err) => {
+                    reject({
+                        statusCode: 1,
+                        message: err,
+                        chans: []
+                    })
+                });
+        });
+    }
+
+    /**
+     * Gets the valid i2c channels.
+     * @return Promise that resolves with an object containing a message, statusCode, and chans array
+     */
+    analogGetOutputChans(): Promise<Return.GetChans> {
+        let packet = this.generatePacket(this.getPacketSize(), 10);
+        return new Promise((resolve, reject) => {
+            this.sendPacketAndParseResponse(packet)
+                .then((data) => {
+                    let chans = [];
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
+                        chans.push(data[i + 5]);
+                    }
+                    resolve({
+                        statusCode: 0,
+                        message: 'ok',
+                        chans: chans
+                    })
+                })
+                .catch((err) => {
+                    reject({
+                        statusCode: 1,
+                        message: err,
+                        chans: []
+                    })
+                });
+        });
+    }
 
     /**
      * Analog read the pinNumber.
@@ -548,6 +608,36 @@ export abstract class GenericLinxDevice {
     **************************************************************************/
 
     /**
+     * Gets the valid spi channels.
+     * @return Promise that resolves with an object containing a message, statusCode, and chans array
+     */
+    spiGetChans(): Promise<Return.GetChans> {
+        let packet = this.generatePacket(this.getPacketSize(), 15);
+        return new Promise((resolve, reject) => {
+            this.sendPacketAndParseResponse(packet)
+                .then((data) => {
+                    let spiChans = [];
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
+                        spiChans.push(data[i + 5]);
+                    }
+                    resolve({
+                        statusCode: 0,
+                        message: 'ok',
+                        chans: spiChans
+                    })
+                })
+                .catch((err) => {
+                    reject({
+                        statusCode: 1,
+                        message: err,
+                        chans: []
+                    })
+                });
+        });
+    }
+
+    /**
      * Open the specified spi channel.
      * @param channel the channel you want to open
      * @return Promise that resolves with an object containing a message and a statusCode
@@ -686,6 +776,36 @@ export abstract class GenericLinxDevice {
     /**************************************************************************
     *   I2C
     **************************************************************************/
+
+    /**
+     * Gets the valid i2c channels.
+     * @return Promise that resolves with an object containing a message, statusCode, and chans array
+     */
+    i2cGetChans(): Promise<Return.GetChans> {
+        let packet = this.generatePacket(this.getPacketSize(), 14);
+        return new Promise((resolve, reject) => {
+            this.sendPacketAndParseResponse(packet)
+                .then((data) => {
+                    let chans = [];
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
+                        chans.push(data[i + 5]);
+                    }
+                    resolve({
+                        statusCode: 0,
+                        message: 'ok',
+                        chans: chans
+                    })
+                })
+                .catch((err) => {
+                    reject({
+                        statusCode: 1,
+                        message: err,
+                        chans: []
+                    })
+                });
+        });
+    }
 
     /**
      * Read on the specified spi channel.
@@ -882,6 +1002,36 @@ export abstract class GenericLinxDevice {
     /**************************************************************************
     *   UART
     **************************************************************************/
+
+    /**
+     * Gets the valid UART channels.
+     * @return Promise that resolves with an object containing a message, statusCode, and chans array
+     */
+    uartGetChans(): Promise<Return.GetChans> {
+        let packet = this.generatePacket(this.getPacketSize(), 13);
+        return new Promise((resolve, reject) => {
+            this.sendPacketAndParseResponse(packet)
+                .then((data) => {
+                    let chans = [];
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
+                        chans.push(data[i + 5]);
+                    }
+                    resolve({
+                        statusCode: 0,
+                        message: 'ok',
+                        chans: chans
+                    })
+                })
+                .catch((err) => {
+                    reject({
+                        statusCode: 1,
+                        message: err,
+                        chans: []
+                    })
+                });
+        });
+    }
 
     /**
      * Uart open on the specified channel and initialize to a specific baud rate.
@@ -1185,7 +1335,7 @@ export namespace Return {
     export interface AnalogRead extends Return.Default { value: number };
     export interface DigitalReadAdvanced extends Return.Default { values: number[] };
     export interface DigitalRead extends Return.Default { value: number };
-    export interface DigitalGetChans extends Return.Default { chans: number[] };
+    export interface GetChans extends Return.Default { chans: number[] };
     export interface GetDeviceName extends Return.Default { deviceName: string };
     export interface GetDeviceUserId extends Return.Default { userId: number };
     export interface SetBaudRate extends Return.Default { actualBaud: number };
