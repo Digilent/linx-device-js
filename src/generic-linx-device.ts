@@ -309,7 +309,8 @@ export abstract class GenericLinxDevice {
             this.sendPacketAndParseResponse(packet)
                 .then((data) => {
                     let returnValues: number[] = [];
-                    for (let i = 0; i < data[1] - 6; i++) {
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
                         returnValues.push(data[i + 5]);
                     }
                     resolve({
@@ -452,7 +453,8 @@ export abstract class GenericLinxDevice {
             this.sendPacketAndParseResponse(packet)
                 .then((data) => {
                     let returnValues: number[] = [];
-                    for (let i = 0; i < data[1] - 6; i++) {
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
                         returnValues.push(data[i + 5]);
                     }
                     resolve({
@@ -522,7 +524,8 @@ export abstract class GenericLinxDevice {
             this.sendPacketAndParseResponse(packet)
                 .then((data) => {
                     let channels: number[] = [];
-                    for (let i = 0; i < data[1] - 6; i++) {
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
                         channels.push(data[i + 5]);
                     }
                     resolve({
@@ -753,7 +756,8 @@ export abstract class GenericLinxDevice {
             this.sendPacketAndParseResponse(packet)
                 .then((data) => {
                     let returnData = [];
-                    for (let i = 0; i < data[1] - 6; i++) {
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
                         returnData.push(data[5 + i]);
                     }
                     resolve({
@@ -879,7 +883,8 @@ export abstract class GenericLinxDevice {
             this.sendPacketAndParseResponse(packet)
                 .then((data) => {
                     let returnData: number[] = [];
-                    for (let i = 0; i < data[1] - 6; i++) {
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
                         returnData.push(data[i + 5]);
                     }
                     resolve({
@@ -1141,7 +1146,8 @@ export abstract class GenericLinxDevice {
             this.sendPacketAndParseResponse(packet)
                 .then((data) => {
                     let returnData: number[] = [];
-                    for (let i = 0; i < data[1] - 6; i++) {
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
                         returnData.push(data[i + 5]);
                     }
                     resolve({
