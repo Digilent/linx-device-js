@@ -382,7 +382,7 @@ export abstract class GenericLinxDevice {
     }
 
     /**
-     * Gets the valid i2c channels.
+     * Gets the valid analog output channels.
      * @return Promise that resolves with an object containing a message, statusCode, and chans array
      */
     analogGetOutputChans(): Promise<Return.GetChans> {
