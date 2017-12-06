@@ -424,10 +424,21 @@ export abstract class GenericLinxDevice {
         return new Promise((resolve, reject) => {
             this.sendPacketAndParseResponse(packet)
                 .then((data) => {
+                    let resolution = data[5];
+                    let lowByte = 0;
+                    let highByte = Math.floor((resolution * 2) / 8);
+                    let lowBitOffset = 0
+                    let andVal = Math.pow(2, resolution) - 1;
+                    let temp = 0;
+                    for (let j = lowByte, k = 0; j <= highByte; j++, k++) {
+                        temp |= data[6 + j] << (k * 8);
+                    }
+                    let trueVal = (temp) & andVal;
                     resolve({
                         statusCode: 0,
                         message: 'ok',
-                        value: data[5]
+                        resolution: resolution,
+                        value: trueVal
                     });
 
                 })
@@ -454,13 +465,25 @@ export abstract class GenericLinxDevice {
                 .then((data) => {
                     let returnValues: number[] = [];
                     let packetSize = (data[1] << 8) | data[2];
-                    for (let i = 0; i < packetSize - 6; i++) {
-                        returnValues.push(data[i + 5]);
+                    let resolution = data[5];
+                    for (let i = 0; i < pinNumbers.length; i++) {
+                        let lowByte = Math.floor((resolution * i) / 8);
+                        let highByte = Math.floor((resolution * (i + 1)) / 8);
+                        let lowBitOffset = (i * resolution) % 8;
+                        let andVal = Math.pow(2, resolution) - 1;
+                        let temp = 0;
+                        for (let j = lowByte, k = 0; j <= highByte; j++, k++) {
+                            temp |= data[6 + j] << (k * 8);
+                        }
+                        let trueVal = (temp >> lowBitOffset) & andVal;
+                        returnValues.push(trueVal);
                     }
+
                     resolve({
                         statusCode: 0,
                         message: 'ok',
-                        values: returnValues
+                        values: returnValues,
+                        resolution: data[5]
                     });
 
                 })
@@ -1226,6 +1249,10 @@ export abstract class GenericLinxDevice {
                         reject('Invalid packet size');
                         return;
                     }
+                    if (data[4] !== 0) {
+                        reject('Status error');
+                        return;
+                    }
                     resolve(data);
 
                 })
@@ -1337,8 +1364,8 @@ export namespace Return {
     export interface SpiWriteRead extends Return.Default { data: number[] };
     export interface SpiSetClockFrequency extends Return.Default { actualFrequency: number };
     export interface ServoGetChannels extends Return.Default { channels: number[] };
-    export interface AnalogReadAdvanced extends Return.Default { values: number[] };
-    export interface AnalogRead extends Return.Default { value: number };
+    export interface AnalogReadAdvanced extends Return.Default { resolution: number, values: number[] };
+    export interface AnalogRead extends Return.Default { resolution: number, value: number };
     export interface DigitalReadAdvanced extends Return.Default { values: number[] };
     export interface DigitalRead extends Return.Default { value: number };
     export interface GetChans extends Return.Default { chans: number[] };
